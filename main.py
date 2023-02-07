@@ -3,6 +3,7 @@ import numpy as np
 import sys
 from pygame.locals import *
 from constants import *
+from board import Board
   
 pygame.init()
  
@@ -11,7 +12,7 @@ fps_clock = pygame.time.Clock()
  
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
- 
+
 # Game loop
 while True:
   screen.fill(WHITE)
@@ -22,7 +23,7 @@ while True:
       sys.exit()
   
   # Update
-  
+  board = Board(screen)
   # Draw
   
   pygame.display.flip()
