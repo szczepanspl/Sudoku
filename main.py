@@ -11,7 +11,7 @@ pygame.init()
 fps_clock = pygame.time.Clock()
  
 
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+screen = pygame.display.set_mode((WIDTH + SIDE_BAR, HEIGHT))
 
 # Game loop
 while True:
