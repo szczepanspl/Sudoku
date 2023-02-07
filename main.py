@@ -2,27 +2,28 @@ import pygame
 import numpy as np
 import sys
 from pygame.locals import *
- 
+from constants import *
+  
 pygame.init()
  
-fps = 60
+
 fps_clock = pygame.time.Clock()
  
-width, height = 640, 480
-screen = pygame.display.set_mode((width, height))
+
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
  
-# Game loop.
+# Game loop
 while True:
-  screen.fill((0, 0, 0))
+  screen.fill(WHITE)
   
   for event in pygame.event.get():
     if event.type == QUIT:
       pygame.quit()
       sys.exit()
   
-  # Update.
+  # Update
   
-  # Draw.
+  # Draw
   
   pygame.display.flip()
-  fps_clock.tick(fps)
+  fps_clock.tick(FPS)
