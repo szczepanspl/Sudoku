@@ -1,7 +1,8 @@
 import pygame
 from constants import *
 import numpy
-import random
+from random import randint
+from pprint import pprint
 
 class Board:
     def __init__(self, screen) -> None:
@@ -10,7 +11,7 @@ class Board:
                         [],[],[],
                         [],[],[]]  
         self.draw_board()
-        print(self.game_array)
+        self.fill_board()
 
     
     def draw_board(self):
@@ -30,24 +31,31 @@ class Board:
                 if j % 3 == 0:
                     pygame.draw.line(self.screen, BLACK, (0, j * SQUARE), (WIDTH, j * SQUARE), 7)
 
+    def fill_tile(self, position:tuple, number:int):
+        field = self.game_array[position[0]][position[1]]
+        field.value = number
+        font = pygame.font.Font(None, 72)
+        text = font.render(f"{field.value}", True, (0, 0, 0))
+        self.screen.blit(text, (position[0] * SQUARE + SQUARE // 3, position[1] * SQUARE + SQUARE // 3))
+        
+
     def fill_board(self):
         # Minimum clues == 17
-        for i in range(17):
-            pass
+        for i in range(18):
+            random_field = self.game_array[randint(0, 8)][randint(0, 8)]
+            if random_field.value == 0:
+                self.fill_tile(random_field.position, randint(1, 9))
+
+
+            
         
 
 class Field:
     def __init__(self, screen, position:tuple) -> None:
         self.screen = screen
         self.clicked = False
-        self.filled = False
         self.value = 0
         self.position = position
-        self.is_filled()
-
-    def is_filled(self):
-        if self.value != 0:
-            self.filled = True
 
     def __repr__(self) -> str:
         return f"Field_{self.value}{self.position}"

@@ -12,19 +12,23 @@ fps_clock = pygame.time.Clock()
  
 
 screen = pygame.display.set_mode((WIDTH + SIDE_BAR, HEIGHT))
+screen.fill(WHITE)
+
+board = Board(screen)
 
 # Game loop
 while True:
-  screen.fill(WHITE)
-  
-  for event in pygame.event.get():
-    if event.type == QUIT:
-      pygame.quit()
-      sys.exit()
-  
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
+
+    
+    
+    
   # Update
-  board = Board(screen)
+ 
   # Draw
   
-  pygame.display.flip()
-  fps_clock.tick(FPS)
+    pygame.display.update()
+    fps_clock.tick(FPS)
