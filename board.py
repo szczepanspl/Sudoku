@@ -5,31 +5,41 @@ from random import randint
 from pprint import pprint
 
 class Board:
+    
     def __init__(self, screen) -> None:
         self.screen = screen
         self.game_array = [[],[],[],
                         [],[],[],
                         [],[],[]]  
-        self.draw_board()
-        self.fill_board()
+        self.create_game_array()
 
     
+    def create_game_array(self):
+        # Creating instance of Field class and appending to game_array list
+        for i in range(ROWS):
+            for j in range(COLS):
+                field = Field(self.screen, (i, j))
+                self.game_array[i].append(field)
+
+
+    def draw_tile(self, coordinates:tuple, color:tuple, thickness:int):
+        rect = (coordinates[0] * SQUARE, coordinates[1] * SQUARE, SQUARE, SQUARE)
+        pygame.draw.rect(self.screen, color, rect, thickness)
+
+
     def draw_board(self):
         # Drawing squares
         for i in range(ROWS):
             for j in range(COLS):
-                # Creating instance of Field class and appending to game_array list
-                field = Field(self.screen, (i, j))
-                self.game_array[i].append(field)
-                # Establishing rect size and drawing it
-                rect = (i * SQUARE, j * SQUARE, SQUARE, SQUARE)
-                pygame.draw.rect(self.screen, BLACK, rect, 1)
+                # Drawing a tile
+                self.draw_tile((i, j), BLACK, 1)
                 # Drawing vertical thick lines
                 if i % 3 == 0:
                     pygame.draw.line(self.screen, BLACK, (i * SQUARE, 0), (i * SQUARE, HEIGHT), 7)
                 # Drawing horizontal thick lines
                 if j % 3 == 0:
                     pygame.draw.line(self.screen, BLACK, (0, j * SQUARE), (WIDTH, j * SQUARE), 7)
+
 
     def fill_tile(self, position:tuple, number:int):
         field = self.game_array[position[0]][position[1]]
@@ -47,7 +57,8 @@ class Board:
                 self.fill_tile(random_field.position, randint(1, 9))
 
 
-            
+    def mark_tile(self, coordinates:tuple):
+        self.draw_tile(coordinates, RED, 3)
         
 
 class Field:
