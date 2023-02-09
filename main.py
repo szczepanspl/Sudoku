@@ -1,5 +1,4 @@
 import pygame
-import numpy as np
 import sys
 from pygame.locals import *
 from constants import *
@@ -17,6 +16,7 @@ screen = pygame.display.set_mode((WIDTH + SIDE_BAR, HEIGHT))
 # Initializing Board class
 board = Board(screen)
 board.randomize_board()
+
 # Game loop
 while True:
     for event in pygame.event.get():
@@ -28,7 +28,6 @@ while True:
             x_cor = mouse_x // SQUARE
             y_cor = mouse_y // SQUARE
             board.game_array[x_cor][y_cor].clicked = True
-            board.mark_tile((x_cor, y_cor))
         if event.type == pygame.KEYDOWN:
             for fields in board.game_array:
                 for field in fields:
