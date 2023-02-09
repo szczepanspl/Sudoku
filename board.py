@@ -12,7 +12,13 @@ class Board:
                         [],[],[],
                         [],[],[]]  
         self.create_game_array()
+        self.randomize_board()
 
+
+    def update_board(self):
+        self.draw_board()
+        self.fill_board()
+        
     
     def create_game_array(self):
         # Creating instance of Field class and appending to game_array list
@@ -32,7 +38,11 @@ class Board:
         for i in range(ROWS):
             for j in range(COLS):
                 # Drawing a tile
-                self.draw_tile((i, j), BLACK, 1)
+                if self.game_array[i][j].clicked:
+                    self.draw_tile((i, j), BLACK, 1)
+                    self.draw_tile((i, j), RED, 4)
+                else:
+                    self.draw_tile((i, j), BLACK, 1)
                 # Drawing vertical thick lines
                 if i % 3 == 0:
                     pygame.draw.line(self.screen, BLACK, (i * SQUARE, 0), (i * SQUARE, HEIGHT), 7)
@@ -50,11 +60,18 @@ class Board:
         
 
     def fill_board(self):
+        for row in self.game_array:
+            for field in row:
+                if field.value != 0:
+                    self.fill_tile(field.position, field.value)
+
+
+    def randomize_board(self):
         # Minimum clues == 17
         for i in range(18):
             random_field = self.game_array[randint(0, 8)][randint(0, 8)]
             if random_field.value == 0:
-                self.fill_tile(random_field.position, randint(1, 9))
+                random_field.value = randint(1, 9)
 
 
     def mark_tile(self, coordinates:tuple):
@@ -70,3 +87,4 @@ class Field:
 
     def __repr__(self) -> str:
         return f"Field_{self.value}{self.position}"
+

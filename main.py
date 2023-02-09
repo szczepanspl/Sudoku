@@ -12,12 +12,11 @@ fps_clock = pygame.time.Clock()
 
 # Screen setup
 screen = pygame.display.set_mode((WIDTH + SIDE_BAR, HEIGHT))
-screen.fill(WHITE)
+
 
 # Initializing Board class
 board = Board(screen)
-board.fill_board()
-
+board.randomize_board()
 # Game loop
 while True:
     for event in pygame.event.get():
@@ -34,7 +33,7 @@ while True:
             for fields in board.game_array:
                 for field in fields:
                     if field.clicked and field.value == 0:
-                        if 48 <= event.key <= 57:
+                        if 49 <= event.key <= 57:
                             number = int(event.key) - 48
                             board.fill_tile(field.position, number)
                         
@@ -43,8 +42,8 @@ while True:
 
  
     
-    
-    board.draw_board()
+    screen.fill(WHITE)
+    board.update_board()
 
     pygame.display.update()
     fps_clock.tick(FPS)
