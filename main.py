@@ -27,7 +27,14 @@ while True:
             mouse_x, mouse_y = pygame.mouse.get_pos()
             x_cor = mouse_x // SQUARE
             y_cor = mouse_y // SQUARE
-            board.game_array[x_cor][y_cor].clicked = True
+            if event.button == 1:
+                try:
+                    board.game_array[x_cor][y_cor].clicked = True
+                except IndexError:
+                    continue
+            elif event.button == 3:
+                board.game_array[x_cor][y_cor].value = 0
+                    
         if event.type == pygame.KEYDOWN:
             for fields in board.game_array:
                 for field in fields:

@@ -2,6 +2,7 @@ import pygame
 from constants import *
 from random import randint
 from pprint import pprint
+from collections import deque
 
 class Board:
     """Class Board that basically manage the game board and individual fields. 
@@ -13,16 +14,19 @@ class Board:
                         [],[],[]]  
         self.create_game_array()
         self.randomize_board()
-        self.marked_tiles()
 
 
     def update_board(self):
+        """Game updating method (drawing and filling the board)"""
         self.draw_board()
         self.fill_board()
-        
     
+    def clear_field(self, position:tuple):
+        self.game_array[position[0]][position[1]].value = 0
+        
+        
     def create_game_array(self):
-        # Creating instance of Field class and appending to game_array list
+        """Creating instance of Field class and appending to game_array list"""
         for i in range(ROWS):
             for j in range(COLS):
                 field = Field(self.screen, (i, j))
@@ -30,24 +34,17 @@ class Board:
 
 
     def draw_tile(self, coordinates:tuple, color:tuple, thickness:int):
+        """Tile drawing method, takes coordinates, color and thickness of rectangle"""
         rect = (coordinates[0] * SQUARE, coordinates[1] * SQUARE, SQUARE, SQUARE)
         pygame.draw.rect(self.screen, color, rect, thickness)
-
-
-    def marked_tiles(self):
-
-        marked_tiles = [tile.clicked
-                        for rows in self.game_array
-                        for tile in rows]
-        print(marked_tiles)
-
+            
 
     def draw_board(self):
         # Drawing squares
         for i in range(ROWS):
             for j in range(COLS):
                 # Drawing a tile
-                if self.game_array[i][j].clicked:
+                if self.game_array[i][j].clicked and self.game_array[i][j].value == 0:
                     self.draw_tile((i, j), BLACK, 1)
                     self.draw_tile((i, j), RED, 4)
                 else:
@@ -92,6 +89,7 @@ class Field:
         self.value = 0
         self.position = position
 
+    
     def __repr__(self) -> str:
         return f"Field_{self.value}{self.position}"
 
