@@ -10,7 +10,7 @@ class Board:
     def __init__(self, screen) -> None:
         self.screen = screen
         self.game_array = [[Field(self.screen, (j, i)) for i in range(COL)] for j in range(ROW)]
-        pprint(self.game_array)
+        self.randomize_board(10)
         
      
     def draw_tile(self, coordinates:tuple, color:tuple, thickness:int):
@@ -26,7 +26,6 @@ class Board:
         text = font.render(f"{field.value}", True, BLACK)
         self.screen.blit(text, (position[0] * SQUARE + SQUARE // 3, position[1] * SQUARE + SQUARE // 3))
 
-    
     
     def clear_tile(self, position:tuple):
         self.game_array[position[0]][position[1]].value = 0           
@@ -64,22 +63,43 @@ class Board:
         
         
     # Temporary method just to check if everything works
-    def randomize_board(self):
-        for rows in self.game_array:
-            for field in rows:
-                field.value = randint(1, 9)
-            
+    def randomize_board(self, num_of_fields):
+        placed_values = 0
+        while placed_values < num_of_fields:
+            random_value = randint(1, 9)
+            random_field = self.game_array[randint(0, 8)][randint(0, 8)]
+            if self.is_possible(random_field.position[0], random_field.position[1], random_value) and random_field.value == 0:
+                random_field.value = random_value
+                placed_values += 1
                 
-            
         
-    def is_possible(self, col, row, n) -> bool:
-        # Check if n not in certain row
-        not_in_row = [[field.value for field in rows] for rows in self.game_array]
-        # print(not_in_row)
+    def is_possible(self, row, col, n) -> bool:
+        values_grid = [[field.value for field in rows] for rows in self.game_array]
+        # Check if not in row
+        not_in_row = n not in values_grid[row]
+        # Check if not in column
+        not_in_col = n not in [values_grid[i][col] for i in range(9)]
+        # Check if not in smaller box
+        not_in_box = n not in [values_grid[i][j] for i in range(row//3*3, row//3*3 + 3) for j in range(col//3*3, col//3*3 + 3)]
+        return not_in_row and not_in_col and not_in_box
         
         
-    def solve(self, row, column, n):
-        pass
+    def solve(self, row=0, column=0):
+        if row == 9:
+            return True
+        elif column == 9:
+            return self.solve(row + 1, 0)
+        elif self.game_array[row][column].value != 0:
+            return self.solve(row, column + 1)
+        else:
+            for n in range(1, 10):
+                if self.is_possible(row, column, n):
+                    self.game_array[row][column].value = n
+                    if self.solve(row, column + 1):
+                        return True
+                    self.game_array[row][column].value = 0
+            return False
+        
         
     
     def is_solved(self) -> bool:
