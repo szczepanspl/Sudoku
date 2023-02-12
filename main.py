@@ -4,41 +4,48 @@ from pygame.locals import *
 from constants import *
 from board import Board
 from pprint import pprint
+from setup import Setup
+ 
+pygame.init()
+# Initializing the clock
+fps_clock = pygame.time.Clock()
  
 def setup():
-    pygame.init()
-    # Initializing the clock
-    fps_clock = pygame.time.Clock()
+    """setup function responsible for gathering data from the user about difficulty level and explaining basic keywords"""
 
     # Screen setup
-    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    setup_screen = pygame.display.set_mode((SETUP_WIDTH, SETUP_HEIGHT))
 
+    # Setup class
+    setup = Setup(setup_screen)
+    
+    done = False
     # Setup loop
-    while True:
+    while not done:
         for event in pygame.event.get():
+            # Handling quit
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
+            # Handling mouse coordinates
             if event.type == MOUSEBUTTONDOWN:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 x_cor = mouse_x // SQUARE
                 y_cor = mouse_y // SQUARE
-                            
-        screen.fill(WHITE)
+        
+        # Reseting the screen                    
+        setup_screen.fill(WHITE)
 
-
+        # Updating and fps settings
         pygame.display.update()
         fps_clock.tick(FPS)
      
 
 def main():
-    pygame.init()
-    # Initializing the clock
-    fps_clock = pygame.time.Clock()
-
+    """Main function responsible for handling all game mechanics using Board class"""
+    
     # Screen setup
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
-
 
     # Initializing Board class
     board = Board(screen)
@@ -46,10 +53,12 @@ def main():
     # Game loop
     while True:
         for event in pygame.event.get():
+            # Handling quit
             if event.type == QUIT:
                 print(board.game_array)
                 pygame.quit()
                 sys.exit()
+            # Handling mouse events
             if event.type == MOUSEBUTTONDOWN:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 x_cor = mouse_x // SQUARE
@@ -57,7 +66,6 @@ def main():
                 # Marking tile on left click button
                 if event.button == 1:
                     try:
-                        # TODO.1 FIX THE BUG WITH CLEANING FIELD AND MARKING THE FIELD
                         board.game_array[x_cor][y_cor].clicked = True
                     except IndexError:
                         continue
@@ -72,14 +80,18 @@ def main():
                             if 49 <= event.key <= 57:
                                 number = int(event.key) - 48
                                 board.fill_tile(field.position, number)
+                # Automatically solve the board on space key press
                 if event.key == K_SPACE:
                     board.solve()
-                            
+        
+        # Reseting screen and updating the board                    
         screen.fill(WHITE)
         board.update_board()
 
-
+        # Updating the game and fps settings
         pygame.display.update()
         fps_clock.tick(FPS)
 
+# Calling functions
+setup()
 main()
