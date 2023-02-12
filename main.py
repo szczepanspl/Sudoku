@@ -3,7 +3,6 @@ import sys
 from pygame.locals import *
 from constants import *
 from board import Board
-from pprint import pprint
 from setup import Setup
  
 pygame.init()
@@ -25,8 +24,9 @@ def setup():
         for event in pygame.event.get():
             # Handling quit
             if event.type == QUIT:
-                pygame.quit()
-                sys.exit()
+                done = True
+                # pygame.quit()
+                # sys.exit()
             # Handling mouse coordinates
             if event.type == MOUSEBUTTONDOWN:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -49,13 +49,13 @@ def main():
 
     # Initializing Board class
     board = Board(screen)
+    board.start_game(1)
 
     # Game loop
     while True:
         for event in pygame.event.get():
             # Handling quit
             if event.type == QUIT:
-                print(board.game_array)
                 pygame.quit()
                 sys.exit()
             # Handling mouse events

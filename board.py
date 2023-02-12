@@ -6,21 +6,35 @@ from pprint import pprint
 
 class Board:
     """Class Board that basically manage the game board and individual fields. 
-    It's responsible for drawing board, marking fields and all basic mechanics"""
+    It's responsible for drawing board, marking fields and all basic mechanics
+    """
     def __init__(self, screen) -> None:
+        """init method
+
+        Args:
+            screen (Surface): screen to operate on
+        """
         self.screen = screen
         self.game_array = [[Field(self.screen, (j, i)) for i in range(COL)] for j in range(ROW)]
-        self.randomize_board(10)
+        
+        
         
      
     def draw_tile(self, coordinates:tuple, color:tuple, thickness:int):
-        """Tile drawing method, takes coordinates, color and thickness of rectangle"""
+        """tile drawing method
+
+        Args:
+            coordinates (tuple): coordinates of block to draw
+            color (tuple): color of the block, black if normal block, red if marked
+            thickness (int): thickness of block, 1 if normal block, 4 if marked block
+        """
         rect = (coordinates[0] * SQUARE, coordinates[1] * SQUARE, SQUARE, SQUARE)
         pygame.draw.rect(self.screen, color, rect, thickness)
      
 
     def fill_tile(self, position:tuple, number:int):
         """Method that takes position and number of field and fills it with text
+        
         Args:
             position (tuple): position of the field
             number (int): value of the field to be added
@@ -34,6 +48,7 @@ class Board:
     
     def clear_tile(self, position:tuple):
         """Method responsible for clearing field that is setting it's value to 0
+        
         Args:
             position (tuple): position of the field to clear it's value
         """
@@ -72,26 +87,38 @@ class Board:
         
         
     # Temporary method just to check if everything works
-    def randomize_board(self, num_of_fields:int):
-        """Method that gives sample of random values that are valid to put on the board for solve() funtion to not generate the same answers
+    def sample_board(self, num_of_fields:int, delete=False):
+        """Method that samples (or delete form) board
+
         Args:
-            num_of_fields (int): number of fields to put random valid numbers on. Usually 5 to 10 works best
+            num_of_fields (int): number of fields to be field with random values. 5 to 10 works best
+            delete (bool, optional): If true then it delete values instead of putting them. Defaults to False:bool.
         """
-        placed_values = 0
-        while placed_values < num_of_fields:
-            random_value = randint(1, 9)
-            random_field = self.game_array[randint(0, 8)][randint(0, 8)]
-            if self.is_possible(random_field.position[0], random_field.position[1], random_value) and random_field.value == 0:
-                random_field.value = random_value
-                placed_values += 1
-                
+        if not delete:
+            placed_values = 0
+            while placed_values <= num_of_fields:
+                random_value = randint(1, 9)
+                random_field = self.game_array[randint(0, 8)][randint(0, 8)]
+                if self.is_possible(random_field.position[0], random_field.position[1], random_value) and random_field.value == 0:
+                    random_field.value = random_value
+                    placed_values += 1
+        else:
+            deleted_values = 0
+            while deleted_values <= num_of_fields:
+                random_field = self.game_array[randint(0, 8)][randint(0, 8)]
+                if random_field.value != 0:
+                    random_field.value = 0
+                    deleted_values += 1            
+            
         
     def is_possible(self, row:int, col:int, n:int) -> bool:
         """Method that checks if putting certain number (n) on some field is valid - it means that there is no same value across row, column and smaller box
+        
         Args:
             row (int): row of field that need to be checked
             col (int): column of field that need to be checked
             n (int): number for check if it is valid to put on the board
+        
         Returns:
             bool: returns True if is valid to put, False when not
         """
@@ -131,7 +158,6 @@ class Board:
             return False
         
         
-    
     def is_solved(self) -> bool:
         all_values = [tile.value
                       for rows in self.game_array
@@ -139,6 +165,26 @@ class Board:
         if 0 in all_values:
             return False
         return True
+    
+    
+    def start_game(self, level:int):
+        """Starting method game, depends on level chosen by player in setup menu
+
+        Args:
+            level (int): Range from 0 to 2. 0 is the easy mode, 1 is the medium mode, 2 is the hard mode
+        """
+        self.sample_board(10)
+        self.solve()
+        # Easy mode
+        if level == 0:
+            self.sample_board(30, delete=True)
+        # Medium mode
+        elif level == 1:
+            self.sample_board(45, delete=True)
+        # Hard mode
+        else:
+            self.sample_board(60, delete=True)                     
+            
                             
 
      
@@ -146,7 +192,6 @@ class Board:
 class Field:
     """ Class Field with screen and position as input, used in Board class to manage single field properly"""
     def __init__(self, screen, position:tuple) -> None:
-        # TODO.2 AFTER GETTING PROPER VALUES IN FIELDS INSTEAD OF RANDOM VALUES, GIVE A FIELD CLASS VARIABLE CORE_POSITION TO PREVENT FROM CHANGING CORE VALUES
         self.screen = screen
         self.clicked = False
         self.value = 0
