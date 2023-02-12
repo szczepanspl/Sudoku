@@ -18,8 +18,13 @@ class Board:
         rect = (coordinates[0] * SQUARE, coordinates[1] * SQUARE, SQUARE, SQUARE)
         pygame.draw.rect(self.screen, color, rect, thickness)
      
-     # Function that takes position and number of field and fills it with text
+
     def fill_tile(self, position:tuple, number:int):
+        """Method that takes position and number of field and fills it with text
+        Args:
+            position (tuple): position of the field
+            number (int): value of the field to be added
+        """
         field = self.game_array[position[0]][position[1]]
         field.value = number
         font = pygame.font.Font(None, 72)
@@ -28,11 +33,15 @@ class Board:
 
     
     def clear_tile(self, position:tuple):
+        """Method responsible for clearing field that is setting it's value to 0
+        Args:
+            position (tuple): position of the field to clear it's value
+        """
         self.game_array[position[0]][position[1]].value = 0           
 
 
     def draw_board(self):
-        # Drawing squares
+        """Drawing board method, handles tiles as well as vertical and horizontal lines on the board"""
         for rows in self.game_array:
             for field in rows:
                 if field.clicked and field.value == 0:
@@ -48,8 +57,8 @@ class Board:
                     pygame.draw.line(self.screen, BLACK, (0, field.position[1] * SQUARE), (WIDTH, field.position[1] * SQUARE), 7)
 
 
-    # Filling game array
     def fill_board(self):
+        """Method responsible for filling game array"""
         for rows in self.game_array:
             for field in rows:
                 if field.value != 0:
@@ -63,7 +72,11 @@ class Board:
         
         
     # Temporary method just to check if everything works
-    def randomize_board(self, num_of_fields):
+    def randomize_board(self, num_of_fields:int):
+        """Method that gives sample of random values that are valid to put on the board for solve() funtion to not generate the same answers
+        Args:
+            num_of_fields (int): number of fields to put random valid numbers on. Usually 5 to 10 works best
+        """
         placed_values = 0
         while placed_values < num_of_fields:
             random_value = randint(1, 9)
@@ -73,7 +86,15 @@ class Board:
                 placed_values += 1
                 
         
-    def is_possible(self, row, col, n) -> bool:
+    def is_possible(self, row:int, col:int, n:int) -> bool:
+        """Method that checks if putting certain number (n) on some field is valid - it means that there is no same value across row, column and smaller box
+        Args:
+            row (int): row of field that need to be checked
+            col (int): column of field that need to be checked
+            n (int): number for check if it is valid to put on the board
+        Returns:
+            bool: returns True if is valid to put, False when not
+        """
         values_grid = [[field.value for field in rows] for rows in self.game_array]
         # Check if not in row
         not_in_row = n not in values_grid[row]
@@ -84,7 +105,16 @@ class Board:
         return not_in_row and not_in_col and not_in_box
         
         
-    def solve(self, row=0, column=0):
+    def solve(self, row=0, column=0) -> bool:
+        """solving funcition using backtracking algorithm and recursion to solve all board
+
+        Args:
+            row (int, optional): Incremented by recursion. Defaults to 0.
+            column (int, optional): Incremented by recursion. Defaults to 0.
+
+        Returns:
+            bool: returns True if done, return False if not
+        """
         if row == 9:
             return True
         elif column == 9:
