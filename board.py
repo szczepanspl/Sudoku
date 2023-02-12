@@ -157,15 +157,6 @@ class Board:
                     self.game_array[row][column].value = 0
             return False
         
-        
-    def is_solved(self) -> bool:
-        all_values = [tile.value
-                      for rows in self.game_array
-                      for tile in rows]
-        if 0 in all_values:
-            return False
-        return True
-    
     
     def start_game(self, level:int):
         """Starting method game, depends on level chosen by player in setup menu
@@ -173,7 +164,7 @@ class Board:
         Args:
             level (int): Range from 0 to 2. 0 is the easy mode, 1 is the medium mode, 2 is the hard mode
         """
-        self.sample_board(10)
+        self.sample_board(8)
         self.solve()
         # Easy mode
         if level == 0:
@@ -182,13 +173,11 @@ class Board:
         elif level == 1:
             self.sample_board(45, delete=True)
         # Hard mode
-        else:
+        elif level == 2:
             self.sample_board(60, delete=True)                     
             
                             
-
-     
-
+  
 class Field:
     """ Class Field with screen and position as input, used in Board class to manage single field properly"""
     def __init__(self, screen, position:tuple) -> None:

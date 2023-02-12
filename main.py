@@ -3,45 +3,45 @@ import sys
 from pygame.locals import *
 from constants import *
 from board import Board
-from setup import Setup
- 
+from tkinter import *
+from tkinter import ttk
+
 pygame.init()
 # Initializing the clock
 fps_clock = pygame.time.Clock()
  
-def setup():
-    """setup function responsible for gathering data from the user about difficulty level and explaining basic keywords"""
 
-    # Screen setup
-    setup_screen = pygame.display.set_mode((SETUP_WIDTH, SETUP_HEIGHT))
-
-    # Setup class
-    setup = Setup(setup_screen)
+def setup() -> int:
+    global selected_value
+    selected_value = None
     
-    done = False
-    # Setup loop
-    while not done:
-        for event in pygame.event.get():
-            # Handling quit
-            if event.type == QUIT:
-                done = True
-                # pygame.quit()
-                # sys.exit()
-            # Handling mouse coordinates
-            if event.type == MOUSEBUTTONDOWN:
-                mouse_x, mouse_y = pygame.mouse.get_pos()
-                x_cor = mouse_x // SQUARE
-                y_cor = mouse_y // SQUARE
+    def button_click(value):
+        global selected_value
+        selected_value = value
+        root.quit()
+
+    root = Tk()
+    frm = ttk.Frame(root, padding=10)
+    frm.grid()
+    ttk.Label(frm, text="Welcome in Sudoku Game!", font=("Arial", 16, "bold")).grid(column=0, row=0, columnspan=3)
+    ttk.Label(frm, text="LMB - mark the tile").grid(column=0, row=1, columnspan=3)
+    ttk.Label(frm, text="RMB - delete the tile").grid(column=0, row=2, columnspan=3)
+    ttk.Label(frm, text="Keys 1-9: fill the tile").grid(column=0, row=3, columnspan=3)
+    ttk.Label(frm, text="Space: Solve Sudoku").grid(column=0, row=3, columnspan=3)
+    ttk.Label(frm, text="Please Choose your difficulty level").grid(column=0, row=4, columnspan=3)
+    ttk.Button(frm, text="Easy mode", command=lambda: button_click(0)).grid(column=0, row=5)
+    ttk.Button(frm, text="Medium mode", command=lambda: button_click(1)).grid(column=1, row=5)
+    ttk.Button(frm, text="Hard mode", command=lambda: button_click(2)).grid(column=2, row=5)
+
+    root.mainloop()
+    root.destroy()
+    
+    return selected_value
+
         
-        # Reseting the screen                    
-        setup_screen.fill(WHITE)
 
-        # Updating and fps settings
-        pygame.display.update()
-        fps_clock.tick(FPS)
-     
 
-def main():
+def main(level):
     """Main function responsible for handling all game mechanics using Board class"""
     
     # Screen setup
@@ -49,7 +49,7 @@ def main():
 
     # Initializing Board class
     board = Board(screen)
-    board.start_game(1)
+    board.start_game(level)
 
     # Game loop
     while True:
@@ -93,5 +93,5 @@ def main():
         fps_clock.tick(FPS)
 
 # Calling functions
-setup()
-main()
+
+main(setup())
