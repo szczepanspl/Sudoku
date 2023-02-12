@@ -18,8 +18,6 @@ class Board:
         self.game_array = [[Field(self.screen, (j, i)) for i in range(COL)] for j in range(ROW)]
         
         
-        
-     
     def draw_tile(self, coordinates:tuple, color:tuple, thickness:int):
         """tile drawing method
 
@@ -86,7 +84,6 @@ class Board:
         self.fill_board()
         
         
-    # Temporary method just to check if everything works
     def sample_board(self, num_of_fields:int, delete=False):
         """Method that samples (or delete form) board
 
@@ -133,7 +130,7 @@ class Board:
         
         
     def solve(self, row=0, column=0) -> bool:
-        """solving funcition using backtracking algorithm and recursion to solve all board
+        """solving method using backtracking algorithm and recursion to solve all board
 
         Args:
             row (int, optional): Incremented by recursion. Defaults to 0.

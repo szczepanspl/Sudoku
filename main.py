@@ -12,6 +12,11 @@ fps_clock = pygame.time.Clock()
  
 
 def setup() -> int:
+    """Setup menu with tkinter
+
+    Returns:
+        int: returns level selected by player
+    """
     global selected_value
     selected_value = None
     
@@ -39,8 +44,6 @@ def setup() -> int:
     return selected_value
 
         
-
-
 def main(level):
     """Main function responsible for handling all game mechanics using Board class"""
     
@@ -93,5 +96,4 @@ def main(level):
         fps_clock.tick(FPS)
 
 # Calling functions
-
 main(setup())
